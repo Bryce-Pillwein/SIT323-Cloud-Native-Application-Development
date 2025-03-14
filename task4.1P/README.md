@@ -48,7 +48,7 @@ This document outlines the steps to set up a **Node.js** and **Express** web ser
 
 ## Project Structure  
 **src/server.ts**  
-Create the file `server.ts` inside the `src` folder. This file will contain your Express server setup and the definitions for your API endpoints.
+Create the file `server.ts` inside the `src` folder. This file will contains the Express server setup and the definitions for the API endpoints.
 
 
 
