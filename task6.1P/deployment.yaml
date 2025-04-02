@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-calculator-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-calculator
+  template:
+    metadata:
+      labels:
+        app: node-calculator
+    spec:
+      containers:
+        - name: node-calculator
+          image: node-calculator:1.0
+          ports:
+            - containerPort: 3000
