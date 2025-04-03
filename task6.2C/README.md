@@ -10,7 +10,7 @@ This document outlines the steps to set up a **Node.js** and **Express** web ser
 1. [Project Structure](#project-structure) 
 2. [Project Initialisation](#project-initialisation)
 3. [API Endpoints](#api-endpoints)
-4. [Development and Testing (**Task 6.1P**)](#development-and-testing)
+4. [Development and Testing (**Task 6.2C**)](#development-and-testing)
 
 
 ## Project Structure  
@@ -128,6 +128,11 @@ The app was deployed to a local Kubernetes cluster using Docker Desktop.
   kubectl apply -f service.yaml
   ```
 
-- Step 4: Access the Application  
+- Step 4: Forward the Port
+  ```sh
+  kubectl port-forward pod/node-calculator-deployment-b9946f645-sxnjh 8080:3000
+  ```
+
+- Step 5: Access the Application  
   - http://localhost:30080
   -  e.g. http://localhost:30080/calculator/sqrt?num1=32
