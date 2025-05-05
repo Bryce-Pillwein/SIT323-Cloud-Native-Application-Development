@@ -136,3 +136,17 @@ The app was deployed to a local Kubernetes cluster using Docker Desktop.
 - Step 5: Access the Application  
   - http://localhost:30080
   -  e.g. http://localhost:30080/calculator/sqrt?num1=32
+
+### Verify Application is Running
+In this section, I extended the Kubernetes deployment from Task 6.2C and demonstrated interaction with the Kubernetes cluster using both CLI and the Kubernetes Dashboard.  
+This confirmed that the calculator microservice pod and its associated service were correctly deployed and available.
+
+- Step 1: Check the running pods
+  ```sh
+  kubectl get pods
+  ```
+
+- Step 1: Check the running services
+  ```sh
+  kubectl get services
+  ```
