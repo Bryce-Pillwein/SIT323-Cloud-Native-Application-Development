@@ -1,14 +1,19 @@
-// Run.Routes
-
 import express, { RequestHandler } from 'express';
-import { logRun, getRunsByUser } from '../controllers/run.controller';
+import {
+  startRun, updateRun,
+  pauseRun, resumeRun,
+  finishRun, cancelRun,
+  getRunsByUser,
+} from '../controllers/run.controller';
 
-const runRouter: express.Router = express.Router();
+const runRouter = express.Router();
 
-// POST /api/run -> log a run
-runRouter.post('/', logRun as RequestHandler);
-
-// GET /api/run/:userId -> fetch all runs for a given user
+runRouter.post('/start', startRun as RequestHandler);
+runRouter.post('/update', updateRun as RequestHandler);
+runRouter.post('/pause', pauseRun as RequestHandler);
+runRouter.post('/resume', resumeRun as RequestHandler);
+runRouter.post('/finish', finishRun as RequestHandler);
+runRouter.post('/cancel', cancelRun as RequestHandler);
 runRouter.get('/:userId', getRunsByUser as RequestHandler);
 
 export default runRouter;
