@@ -7,6 +7,10 @@ This project is a cloud-native calculator microservice built using **Node.js** a
 
 The microservice exposes arithmetic operations via RESTful API endpoints and logs each operation to a MongoDB database.
 
+
+<br/>
+
+
 ## Table of Contents
 
 1. [Project Structure](#project-structure)  
@@ -15,6 +19,11 @@ The microservice exposes arithmetic operations via RESTful API endpoints and log
 4. [MongoDB Kubernetes Files Explained](#mongodb-kubernetes-files-explained)  
 5. [Deployment](#deployment)  
 6. [API Endpoints](#api-endpoints)  
+7. [Database Backup](#database-backup)
+8. [Monitoring Performance](#monitoring-performance)
+
+
+<br/>
 
 
 ## Project Structure  
@@ -38,6 +47,10 @@ The microservice exposes arithmetic operations via RESTful API endpoints and log
   ├── node-deployment.yaml
   └── node-service.yaml
 ```
+
+
+<br/>
+
 
 ## Project Initialisation
 
@@ -71,6 +84,9 @@ The microservice exposes arithmetic operations via RESTful API endpoints and log
      ```
 
 
+<br/>
+
+
 ## Development
 
 ### Dockerisation
@@ -85,6 +101,8 @@ Build the image:
 docker build -t node-calculator:1.0 .
 ```
 
+
+<br/>
 
 
 ## MongoDB Kubernetes Files
@@ -104,6 +122,8 @@ docker build -t node-calculator:1.0 .
 4. mongo-service.yaml – Internal Networking  
    Creates a Kubernetes Service to expose the MongoDB deployment within the cluster. It allows other pods (e.g. your Node.js app) to connect using the hostname mongo-service.  
 
+
+<br/>
 
 
 ## Deployment
@@ -133,6 +153,9 @@ kubectl port-forward svc/node-calculator-service 3000:3000
   - http://localhost:3000/calculator/history
 
 
+<br/>
+
+
 ## API Endpoints
 
 ### Calculator Operations
@@ -154,3 +177,58 @@ kubectl port-forward svc/node-calculator-service 3000:3000
 | PUT    | `/calculator/update/:id` | Update a stored operation                           |
 | DELETE | `/calculator/delete/:id` | Delete an operation by its MongoDB ID               |
 
+
+<br/>
+
+
+## Database Backup
+
+MongoDB is deployed with a PersistentVolumeClaim (PVC), which ensures data stored in /data/db is retained even if the pod restarts or is rescheduled. This forms the foundation for basic disaster recovery.
+
+- MongoDB uses a PVC (mongo-pvc) to persist data across restarts and failures.  
+- The database path /data/db is mounted via Kubernetes and survives pod lifecycle events.
+- Disaster recovery is supported via manual backups using mongodump.
+
+### Using Manual Backups
+
+Mongo Dump: 
+```sh
+kubectl exec -it <mongo-pod-name> --mongodump --username=mongouser --password=mongopass --authenticationDatabase=admin --out=/data/backup
+```
+
+Mongo Restore: 
+```sh
+kubectl exec -it <mongo-pod-name> --mongorestore --username=mongouser --password=mongopass --authenticationDatabase=admin /data/backup
+```
+
+
+<br/>
+
+
+## Monitoring Performance
+
+Basic performance and health monitoring are integrated using Kubernetes commands and probes.
+
+### Kubernetes Health Probes
+The Node.js microservice deployment includes:
+
+- Liveness Probe: Verifies the service is running. If it fails, Kubernetes will restart the pod.
+- Readiness Probe: Ensures the app is fully ready to serve traffic (i.e. connected to MongoDB) before receiving requests.
+
+### Manual Monitoring Tools
+
+Application logs:
+```sh
+kubectl logs deployment/node-calculator-deployment
+```
+
+MongoDB logs:
+```sh
+kubectl logs deployment/mongo
+```
+
+Pod status and events:
+```sh
+kubectl get pods
+kubectl describe pod <pod-name>
+```
