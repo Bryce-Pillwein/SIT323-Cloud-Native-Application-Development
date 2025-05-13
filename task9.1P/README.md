@@ -15,12 +15,13 @@ The microservice exposes arithmetic operations via RESTful API endpoints and log
 
 1. [Project Structure](#project-structure)  
 2. [Project Initialisation](#project-initialisation)  
-3. [Development](#development)  
-4. [MongoDB Kubernetes Files Explained](#mongodb-kubernetes-files-explained)  
-5. [Deployment](#deployment)  
-6. [API Endpoints](#api-endpoints)  
-7. [Database Backup](#database-backup)
-8. [Monitoring Performance](#monitoring-performance)
+3. [Functional Overview]()
+4. [Development](#development)  
+5. [MongoDB Kubernetes Files](#mongodb-kubernetes-files)  
+6. [Deployment](#deployment)  
+7. [API Endpoints](#api-endpoints)  
+8. [Database Backup](#database-backup)
+9. [Monitoring Performance](#monitoring-performance)
 
 
 <br/>
@@ -47,6 +48,22 @@ The microservice exposes arithmetic operations via RESTful API endpoints and log
   ├── node-deployment.yaml
   └── node-service.yaml
 ```
+
+
+<br/>
+
+
+## Functional Overview
+
+The calculator microservice exposes several endpoints to perform arithmetic operations. Each time a calculation is performed (e.g., /add, /divide), the result is automatically stored in MongoDB — this effectively represents a "Create" operation in CRUD.  
+In addition to automatic logging, a full set of CRUD endpoints was developed to manage stored calculation history:  
+
+| Action     | Description                                                                        |
+| ---------- | ---------------------------------------------------------------------------------  |
+| **Create** | Calculator operation logs result using an `insertOne()`, equivalent of a `POST`.   |
+| **Read**   | The `/calculator/history` endpoint fetches the latest 20 records from MongoDB.     |
+| **Update** | The `/calculator/update/:id` endpoint allows modifying a result stored in MongoDB. |
+| **Delete** | The `/calculator/delete/:id` endpoint deletes a specific record by `_id`.          |
 
 
 <br/>
