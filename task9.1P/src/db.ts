@@ -1,3 +1,4 @@
+
 import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGO_URI || '';
@@ -11,5 +12,3 @@ export const getHistoryCollection = async () => {
   }
   return client.db('calculator').collection('history');
 };
-
-

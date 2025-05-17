@@ -104,6 +104,10 @@ In addition to automatic logging, a full set of CRUD endpoints was developed to 
 <br/>
 
 
+
+docker build -t brycepillwein/node-gscloud-monitor:1.0 .
+docker push brycepillwein/node-gscloud-monitor:1.0
+
 ## Development
 
 ### Dockerisation
