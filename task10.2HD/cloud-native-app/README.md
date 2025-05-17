@@ -23,6 +23,7 @@ docker build -t gcr.io/sit323-25t1-pillwein-49bc3d5/tempo-backend:latest .
 Step 4: Re-tag for Artifact Registry
 docker tag gcr.io/sit323-25t1-pillwein-49bc3d5/tempo-backend:latest australia-southeast2-docker.pkg.dev/sit323-25t1-pillwein-49bc3d5/tempo/tempo-backend:latest
 
+docker tag tempo-backend:latest australia-southeast2-docker.pkg.dev/sit323-25t1-pillwein-49bc3d5/tempo/tempo-backend:latest
 
 Step 5: Authenticate Docker
 gcloud auth configure-docker australia-southeast2-docker.pkg.dev
@@ -30,6 +31,10 @@ gcloud auth configure-docker australia-southeast2-docker.pkg.dev
 Step 6: Push the image
 docker push australia-southeast2-docker.pkg.dev/sit323-25t1-pillwein-49bc3d5/tempo/tempo-backend:latest
 
+
+
+
+gcloud container clusters get-credentials tempo-cluster --region australia-southeast2
 
 ### Testing
 Test Locally
@@ -55,3 +60,21 @@ Service URL: https://tempo-backend-866428026611.australia-southeast2.run.app
 reduce credit consumption
 gcloud run services update tempo-backend --min-instances 0
 
+
+
+
+
+
+
+kubectl apply -f deployment-dev.yaml
+kubectl rollout status deployment tempo-backend
+kubectl get pods
+
+# 1. (If not already) log in to Docker Hub
+docker login
+
+# 2. Tag your local image for your Docker Hub repo
+docker tag tempo-backend:local brycepillwein/tempo-backend:latest
+
+# 3. Push it to Docker Hub
+docker push brycepillwein/tempo-backend:latest

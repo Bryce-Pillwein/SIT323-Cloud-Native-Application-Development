@@ -1,5 +1,5 @@
 # Use official Node.js LTS image
-FROM node:18
+FROM node:18-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -8,6 +8,9 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
+# Copy the .env
+COPY .env ./
+
 # Copy the rest of the source code
 COPY . .
 
@@ -15,7 +18,7 @@ COPY . .
 RUN npm run build
 
 # Expose the port
-EXPOSE 3001
+EXPOSE 3000
 
 # Start the app
 CMD [ "npm", "start" ]

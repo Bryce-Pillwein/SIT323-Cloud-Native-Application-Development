@@ -1,0 +1,145 @@
+/* DrukeWide-Medium */
+@font-face {
+  font-family: 'DrukeWide-Medium';
+  src: url('/fonts/DrukWide/DrukWide-Medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* 
+  || BASE / PRE-FLIGHT
+*/
+@layer base {
+  body {
+    background-color: hsl(0, 0%, 95%);
+    color: hsl(0, 0%, 5%);
+  }
+
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+  }
+
+  ul[role='list'],
+  ol[role='list'] {
+    list-style: none;
+  }
+
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+  }
+
+  a:not([class]) {
+    text-decoration-skip-ink: auto;
+  }
+
+  a {
+    text-decoration: None;
+    color: inherit;
+  }
+
+  img,
+  picture,
+  svg {
+    max-width: 100%;
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* 
+  || Utilities - Integration with tailwind
+*/
+@layer utilities {
+  .app-container {
+    --max-width: 100%;
+    --padding: 2rem;
+    width: min(var(--max-width), 100% - (var(--padding) * 2));
+    margin-inline: auto;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media screen and (max-width: 425px) {
+    .app-container {
+      width: 95%;
+    }
+  }
+
+  .input-resize-content {
+    field-sizing: content;
+  }
+
+  .df-input {
+    resize: none;
+    border: none;
+    outline: 1px solid hsl(0, 0%, 90%);
+    background-color: hsl(0, 0%, 95%);
+    border-radius: 0.25rem;
+    padding: 0.25lh 0.5lh;
+  }
+
+  .df-input-white {
+    background-color: hsl(0, 0%, 100%);
+  }
+
+
+  .df-input:focus {
+    outline: 1px solid #FF3EB5;
+  }
+
+  .df-input::placeholder {
+    color: hsl(0, 0%, 50%);
+  }
+
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
