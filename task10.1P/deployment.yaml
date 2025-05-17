@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-gscloud-monitor-deployment
+  name: gscloud-monitor-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: node-gscloud-monitor
+      app: gscloud-monitor
   template:
     metadata:
       labels:
-        app: node-gscloud-monitor
+        app: gscloud-monitor
     spec:
       containers:
-        - name: node-gscloud-monitor
-          image: <your-dockerhub-username>/node-gscloud-monitor:1.0
+        - name: gscloud-monitor
+          image: brycepillwein/gscloud-monitor:latest
           ports:
             - containerPort: 3000
 
-          # Health check probes
+          # Health Probes
           livenessProbe:
             httpGet:
               path: /
@@ -33,11 +33,11 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
 
-          # Resource usage monitoring (for GCP dashboards)
+          # Resources for Monitoring
           resources:
             requests:
               cpu: 100m
               memory: 128Mi
             limits:
-              cpu: 200m
+              cpu: 250m
               memory: 256Mi

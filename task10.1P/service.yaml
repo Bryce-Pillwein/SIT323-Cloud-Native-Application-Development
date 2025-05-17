@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: node-gscloud-monitor-service
+  name: gscloud-monitor-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
-    app: node-gscloud-monitor
+    app: gscloud-monitor
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-      nodePort: 30080
