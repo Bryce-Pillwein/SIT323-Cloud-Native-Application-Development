@@ -9,10 +9,28 @@ This project demonstrates the deployment and monitoring of a Node.js application
 
 ## Table of Contents
 1. [Project Structure](#project-structure)  
-2. [Project Initialisation](#project-initialisation)  
-3. [Development and Testing](#development-and-testing)
-4. [Monitoring](#monitoring)
-5. [API Endpoints](#api-endpoints)
+2. [Tools and Configurations Used](#tools-and-configurations-used)  
+3. [Project Initialisation](#project-initialisation)  
+4. [Development and Testing](#development-and-testing)
+5. [Monitoring](#monitoring)
+6. [Challenes Faced and Solutions](#challenges-faced-and-solutions)
+7. [API Endpoints](#api-endpoints)
+
+
+<br/>
+
+
+## Tools and Configurations Used
+| Tool / Service                     | Purpose                                  |
+| ---------------------------------- | ---------------------------------------- |
+| **Node.js**                        | Runtime environment for the application  |
+| **Docker**                         | Containerisation of the Node.js app      |
+| **Docker Hub**                     | Hosting the public Docker image          |
+| **Google Kubernetes Engine (GKE)** | Hosting and scaling the container        |
+| **Kubernetes Autopilot**           | Simplified cluster management            |
+| **kubectl**                        | CLI tool to interact with Kubernetes     |
+| **Cloud Monitoring**               | Viewing CPU, memory, and traffic metrics |
+| **Cloud Logging**                  | Viewing logs from the running container  |
 
 
 <br/>
@@ -117,6 +135,9 @@ http://34.129.179.208:3000
 - Accessing this URL triggers requests and usage metrics.
 
 
+<br/>
+
+
 ## Monitoring
 
 Metrics Explorer  
@@ -127,6 +148,19 @@ Metrics Explorer
   - kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores
 
 
+<br/>
+
+## Challenges Faced and Solutions
+
+| Challenge                 | Resolution                                                |
+|---------------------------|-----------------------------------------------------------|
+| Image couldn't be pulled  | Used Docker Hub instead of private registry               |
+| No nodes in Autopilot     | Triggered by deploying a workload                         |
+| `kubectl` access failed   | Enabled ADC with `gcloud auth application-default login`  |
+| No metrics appeared       | Generated traffic manually via https web access           |
+
+
+<br/>
 
 
 ## API Endpoints
