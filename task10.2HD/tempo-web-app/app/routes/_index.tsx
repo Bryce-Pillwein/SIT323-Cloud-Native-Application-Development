@@ -1,13 +1,13 @@
-import type { MetaFunction } from "@remix-run/node";
+import TitleBar from "~/components/layout/TitleBar";
+import PanelElderly from "~/components/panelElderly/PanelElderly";
 
-export const meta: MetaFunction = () => {
-  return [{ title: "New Remix App" }, { name: "description", content: "Welcome to Remix!" },];
-};
 
 export default function Index() {
   return (
-    <div className="flex h-screen items-center justify-center">
-      <h1 className="font-drukWide">HELLO</h1>
+    <div className="flex flex-col h-screen">
+      <TitleBar />
+
+      <PanelElderly userId="elderly_1234" />
 
     </div>
   );

@@ -14,6 +14,8 @@ export interface BaseHealthData {
   temperature: number;      // degrees Celsius
   motion: boolean;          // is moving or not
   location: Location;
+  accelZ: number            // Z axis Accelerometer (fall detection)
+  fallDetected: boolean     // Fall detection
 }
 
 export interface RunHealthData extends BaseHealthData {

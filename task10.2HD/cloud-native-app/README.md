@@ -65,16 +65,38 @@ gcloud run services update tempo-backend --min-instances 0
 
 
 
+# 1. (If not already) log in to Docker Hub
+docker login
+
+# 1. Rebuild the image locally with the same “latest” tag
+docker build -t brycepillwein/tempo-backend:latest .
+
+# 2. Push it to Docker Hub
+docker push brycepillwein/tempo-backend:latest
+
+# 3. Trigger a rolling restart so the new image is pulled
+kubectl rollout restart deployment tempo-backend
+
+# 4. Watch the new pods come up
+kubectl rollout status deployment tempo-backend
+kubectl get pods
+kubectl get svc tempo-backend
+
+
+
 
 kubectl apply -f deployment-dev.yaml
 kubectl rollout status deployment tempo-backend
 kubectl get pods
 
-# 1. (If not already) log in to Docker Hub
-docker login
 
-# 2. Tag your local image for your Docker Hub repo
-docker tag tempo-backend:local brycepillwein/tempo-backend:latest
 
-# 3. Push it to Docker Hub
-docker push brycepillwein/tempo-backend:latest
+
+# down
+kubectl scale deployment tempo-backend --replicas=0
+kubectl delete service tempo-backend
+
+# up
+reset
+kubectl scale deployment tempo-backend --replicas=2
+kubectl apply -f service.yaml

@@ -16,15 +16,14 @@ export default {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji",],
       },
       colors: {
-        hsl: {
-          l5: 'hsl(0 0% 5%)', l10: 'hsl(0 0% 10%)', l13: 'hsl(0 0% 13%)',
-          l15: 'hsl(0 0% 15%)', l20: 'hsl(0 0% 20%)', l25: 'hsl(0 0% 25%)',
-          l30: 'hsl(0 0% 30%)', l40: 'hsl(0 0% 40%)',
-          l50: 'hsl(0 0% 50%)',
-          l60: 'hsl(0 0% 60%)', l70: 'hsl(0 0% 70%)',
-          l80: 'hsl(0 0% 80%)', l85: 'hsl(0 0% 85%)', l90: 'hsl(0 0% 90%)',
-          l95: 'hsl(0 0% 95%)', l98: 'hsl(0 0% 98%)', l100: 'hsl(0 0% 100%)',
-        },
+        hsl5: 'hsl(0 0% 5%)', hsl10: 'hsl(0 0% 10%)', hsl13: 'hsl(0 0% 13%)',
+        hsl15: 'hsl(0 0% 15%)', hsl20: 'hsl(0 0% 20%)', hsl25: 'hsl(0 0% 25%)',
+        hsl30: 'hsl(0 0% 30%)', hsl40: 'hsl(0 0% 40%)',
+        hsl50: 'hsl(0 0% 50%)',
+        hsl60: 'hsl(0 0% 60%)', hsl70: 'hsl(0 0% 70%)',
+        hsl80: 'hsl(0 0% 80%)', hsl85: 'hsl(0 0% 85%)', hsl90: 'hsl(0 0% 90%)',
+        hsl95: 'hsl(0 0% 95%)', hsl98: 'hsl(0 0% 98%)', hsl100: 'hsl(0 0% 100%)',
+
         mb: {
           'pink': '#FF3EB5',
           'yellow': '#FFE900',

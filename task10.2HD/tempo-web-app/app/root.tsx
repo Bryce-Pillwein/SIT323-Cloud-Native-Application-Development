@@ -1,7 +1,12 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, } from "@remix-run/react";
+import { Links, Meta, MetaFunction, Outlet, Scripts, ScrollRestoration, } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
 import "./tailwind.css";
+import Providers from "./providers/Providers";
+
+export const meta: MetaFunction = () => {
+  return [{ title: "TempoTrack Vital" }, { name: "description", content: "Tempo Track" },];
+};
 
 export const links: LinksFunction = () => [
   // Preload Custom font
@@ -31,5 +36,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <Providers>
+      <Outlet />
+    </Providers>
+  )
 }
