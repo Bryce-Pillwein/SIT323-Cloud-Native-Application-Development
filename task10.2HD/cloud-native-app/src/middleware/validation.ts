@@ -6,9 +6,9 @@ const baseSchema = z.object({
   userId: z.string(),
   timestamp: z.string().refine(s => !Number.isNaN(Date.parse(s)), 'Invalid ISO date'),
   mode: z.enum(['idle', 'run', 'emergency']),
-  heartRate: z.number().min(0).max(220),
+  heartRate: z.number().min(0).max(1000),
   spo2: z.number().min(0).max(100),
-  temperature: z.number().min(30).max(45),
+  temperature: z.number().min(20).max(50),
   motion: z.boolean(),
   location: z.object({ lat: z.number(), lng: z.number() })
 });

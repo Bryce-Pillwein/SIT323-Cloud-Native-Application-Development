@@ -56,7 +56,7 @@ const postDataHandler = async (
     if (abnormal) {
       await sendAlert(data.userId, abnormal, data)
       // Message for User
-      alertMessage = `🚨 Emergency detected (${abnormal}). Help is on the way to ${data.location.lat.toFixed(3)},${data.location.lng.toFixed(3)}.`;
+      alertMessage = `Emergency detected (${abnormal}).\nHelp is on the way to ${data.location.lat.toFixed(3)},${data.location.lng.toFixed(3)}.`;
     };
 
     // Run-mode aggregation
