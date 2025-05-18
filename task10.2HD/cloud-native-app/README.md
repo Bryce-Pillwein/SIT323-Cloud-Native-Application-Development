@@ -85,7 +85,7 @@ kubectl get svc tempo-backend
 
 
 
-kubectl apply -f deployment-dev.yaml
+kubectl apply -f deployment.yaml
 kubectl rollout status deployment tempo-backend
 kubectl get pods
 
@@ -100,3 +100,7 @@ kubectl delete service tempo-backend
 reset
 kubectl scale deployment tempo-backend --replicas=2
 kubectl apply -f service.yaml
+
+
+
+kubectl set image deployment/tempo-backend tempo-backend=brycepillwein/tempo-backend:v1.0.1 --record

@@ -1,13 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../config/firebase';
-import { checkForAbnormalVitals } from '../services/checkForAbnormalVitals';
-import { validateHealthData } from '../middleware/validation';
-import { HealthData, RunHealthData } from '../types/HealthData';
-import { updateRunAggregation } from '../services/updateRunAggregation';
-import { bufferAndAggregate } from '../services/aggregateHealthData';
-import { sendAlert } from '../services/alertService';
-import { UserProfile } from '../types/UserProfile';
+import { db } from '../../config/firebase';
+import { checkForAbnormalVitals } from '../../services/checkForAbnormalVitals';
+import { validateHealthData } from '../../middleware/validation';
+import { HealthData, RunHealthData } from '../../types/HealthData';
+import { updateRunAggregation } from '../../services/updateRunAggregation';
+import { bufferAndAggregate } from '../../services/aggregateHealthData';
+import { sendAlert } from '../../services/alertService';
+import { UserProfile } from '../../types/UserProfile';
 
 const router = Router();
 

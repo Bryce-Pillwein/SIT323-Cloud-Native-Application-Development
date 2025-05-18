@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { BACKEND_URL } from "~/config/backendUrl";
 import { SimulatorElderly } from "~/services/simulators/simulatorElderly";
 import type { HealthData } from "~/types/HealthData";
+import HealthChart from "../HealthChart";
 
 const PanelElderly = ({ userId }: { userId: string }) => {
   const [running, setRunning] = useState(false);
@@ -46,12 +47,15 @@ const PanelElderly = ({ userId }: { userId: string }) => {
   }, [running]);
 
 
-
   return (
     <div className="grid grid-cols-5 m-4 px-4 py-2 rounded shadow-sm bg-hsl-l100 border border-hsl95 bg-white">
 
       <div className="col-span-4">
         <h2 className="text-xl font-semibold">Elderly User Panel</h2>
+
+        {userId && (
+          <HealthChart userId={userId} />
+        )}
 
         {lastData ? (
           <pre className="bg-gray-100 p-2 rounded">

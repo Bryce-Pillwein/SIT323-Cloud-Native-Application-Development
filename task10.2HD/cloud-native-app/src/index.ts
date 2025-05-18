@@ -36,5 +36,4 @@ app.use((req, res) => {
 // — Start Server —
 app.listen(PORT, () => {
   console.log(`Cloud backend listening on port ${PORT}`);
-  // console.log(`http://localhost:${PORT}/`);
 });

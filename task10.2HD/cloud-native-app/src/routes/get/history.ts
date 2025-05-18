@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { db } from '../config/firebase';
+import { db } from '../../config/firebase';
 import { ParsedQs } from 'qs';
 
 const router = Router();
