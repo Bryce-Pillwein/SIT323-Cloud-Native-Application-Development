@@ -4,9 +4,24 @@ import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import router from './routes/index';
+import { logToFirestore } from './services/monitoring/appLogger';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+
+const origLog = console.log;
+console.log = (...args: any[]) => {
+  origLog(...args);
+  logToFirestore('INFO', args.map(String).join(' ')).catch(console.error);
+};
+
+const origError = console.error;
+console.error = (...args: any[]) => {
+  origError(...args);
+  logToFirestore('ERROR', args.map(String).join(' ')).catch(() => { });
+};
+
 
 // — Logging —
 app.use((req, res, next) => {

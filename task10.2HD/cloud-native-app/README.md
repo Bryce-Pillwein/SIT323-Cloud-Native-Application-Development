@@ -104,3 +104,17 @@ kubectl apply -f service.yaml
 
 
 kubectl set image deployment/tempo-backend tempo-backend=brycepillwein/tempo-backend:v1.0.1 --record
+
+
+# Service Account for logs
+
+kubectl create serviceaccount tempo-backend-sa
+
+
+gcloud iam service-accounts create tempo-logging-sa --display-name="Tempo Logging Reader"
+
+gcloud projects add-iam-policy-binding sit323-25t1-pillwein-49bc3d5 --member="serviceAccount:tempo-logging-sa@sit323-25t1-pillwein-49bc3d5.iam.gserviceaccount.com" --role="roles/logging.viewer"
+
+
+
+kubectl set image deployment/tempo-backend tempo-backend=brycepillwein/tempo-backend:v1.0.2 --record
