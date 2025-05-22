@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-service
+  labels:
+    app: profile-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: profile-service
+  template:
+    metadata:
+      labels:
+        app: profile-service
+    spec:
+      containers:
+        - name: profile-service
+          image: docker.io/brycepillwein/profile-service:latest
+          ports:
+            - containerPort: 3001
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3001
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          env:
+            - name: PORT
+              value: "3001"
+            - name: FIREBASE_PROJECT_ID
+              value: "tempo-vital-tracker-sit323"
+            - name: FIREBASE_ADMIN_CLIENT_EMAIL
+              value: "firebase-adminsdk-fbsvc@tempo-vital-tracker-sit323.iam.gserviceaccount.com"
+            - name: FIREBASE_ADMIN_PRIVATE_KEY
+              value: "-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4kshLzlmYdihz\\nm0M38ntFMVa2evVfpgv21jy7EIkgYfetVTf/LcgzqKxWNIUj4y3DkbGC+AyDJdwW\\n3KTV6Dxs2FQWZV+g+uN1IfeX5YXNT1oBHat2jgyAL79PfOl6W6h1vJy8GdEWfZ9c\\nCkQB3njIpnv2R+dhsu8g82Ntyned4X8jdZ0RC+LjhrBiU/vbdtXL1yHuXLBu3Wly\\nWdpearQKAw4TH/wNXT7/65SJdIwQ5q6fd4TAVS8VDDBjeqULf80LYkQeg2VNOqMn\\nT61tU9CspOEemZ5hQMizfkrd/rYDn+OWHR5EsALB6tFKYUv4IgMI5kjcGRqLQ3tT\\nEND4SinxAgMBAAECggEAIrBLfpvIkPPcBGYwyuoCqu1r653OUeymIP0AqvOfoftn\\njicPACF9l9/ii80RHL6Mkk3me8PcriVGaPGM9TrRaG971j21LE8awp/gpaaYcA6y\\nzrThzcVCqjDPFsRWKQ3i6kXJezyq5Dw14Bl50JQcRTGs6It4/A6iDKJRlIfR1VUC\\nhVBp16RneRi8iyowOl7ebiuJDstYsKQTIsFJ9h56jIKoN6vbxoXNKK1gHa13IARx\\nhWk+qlJMu2EpfyYYJKvUkdTvHMZdJD9YO/WUSWFE82L1cFoy316Wo9RilMe4mRc+\\nYrKsGyUVkS7XgzEM1eKvJD2IMyJCO5tjsDymKHTfsQKBgQD6frZXp2WZw38noTQ0\\n+F7oE9XoufHaEIi51bw33sizjdjntduS8DQCWgDsU27qPzmCzrf0fdj8cr40m+mi\\nXPVSMKDibGDLAwPpeuwyzqRIHBO11Xg00+rKLqbWMkpL/NNKn/GDqgvW0HZxFjr5\\nt8tEBImWI5rIl4R+b8poVlnRTQKBgQC8oTHEvG2gE339xZ59kb3lLPVpyqNBsuLa\\n6LK8mFtiQSde1BGQHjrZCjXhM07WpIVroE4UakmrivdQzTUd+fe3kopTQb6hzRUQ\\nxiTpxmnmNH6cwunEo0ZH9j16LNTJyJ2tb3IGb80KHyFEClHtGHa7jDG1A46GNORP\\nbhDBm56pNQKBgF0PE/iuZK1iFmwHlFiVaNS5Ab/qzHGhsNmxELKE3nTuHoW+ZutI\\nt1mkTDF/sXXutRPmbiqzUhg/HHB496vs8upszGgxsSfaX+quUu9xG1D6tUvZGUYu\\n8EvaVvq+RiHCtFBF6ThrxOgyG75ZbuF0qVwEf4S6h3c76un55+0pH0cFAoGAF303\\nNlmEiTeEK/LM7rQUYpJ7qQXb2JWPHFV31HZggta8MVnVKg4po9daqEV8Xswz9RgM\\nQQyPSfZPH9e98pKrH0f3Q7DfLUTdh6408IuNqmYFEj5PX/Y5DUMDmtA0W0BJKkzD\\ndTu827LOsKtcUlsGhgpKMlFUETBK8f0xxvo7ArUCgYEApeaH8fkgcm/lM8TW5Ud7\\nlpY18tNVIAk8EjfUzVQ2cG4zgnbbdY1bCyGxDSHr1ZRwSR8HWBvJP/9xcwLnA+yO\\nb7mEZIL0PaST2Mbx0bwL1MDoKgHKXQSTC2N5bcCyCYBD7Jc/bcqj51dDJ2jR/7pM\\nEOwZFD9yH4NoyMmEk7igBhY=\\n-----END PRIVATE KEY-----\\n"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-service
+spec:
+  selector:
+    app: profile-service
+  ports:
+    - port: 3001
+      targetPort: 3001
+  type: ClusterIP

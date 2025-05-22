@@ -6,7 +6,7 @@ import { validateHealthData } from '../../middleware/validation';
 import { HealthData, RunHealthData } from '../../types/HealthData';
 import { updateRunAggregation } from '../../services/updateRunAggregation';
 import { bufferAndAggregate } from '../../services/aggregateHealthData';
-import { sendAlert } from '../../services/alertService';
+import { sendAlert } from '../../../../tempo-cloud-native-app/services/alert-service/src/services/logAlert';
 import { UserProfile } from '../../types/UserProfile';
 
 const router = Router();

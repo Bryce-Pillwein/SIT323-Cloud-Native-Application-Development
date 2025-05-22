@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ingestion-service
+  name: abnormality-service
   labels:
-    app: ingestion-service
+    app: abnormality-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ingestion-service
+      app: abnormality-service
   template:
     metadata:
       labels:
-        app: ingestion-service
+        app: abnormality-service
     spec:
       containers:
-        - name: ingestion-service
-          image: docker.io/brycepillwein/ingestion-service:latest
+        - name: abnormality-service
+          image: docker.io/brycepillwein/abnormality-service:latest
           ports:
-            - containerPort: 3000
+            - containerPort: 3002
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 3000
+              port: 3002
             initialDelaySeconds: 15
             periodSeconds: 10
           env:
@@ -30,17 +30,19 @@ spec:
               value: "mqtt://broker.hivemq.com:1883"
             - name: MQTT_TOPIC
               value: "tempotrackvital0192837465/health/new"
-            - name: PORT
-              value: "3000"
+            - name: PROFILE_SERVICE_URL
+              value: "http://profile-service:3001"
+            - name: ALERT_SERVICE_URL
+              value: "http://alert-service:3003/v1/alert"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ingestion-service
+  name: abnormality-service
 spec:
   selector:
-    app: ingestion-service
+    app: abnormality-service
   ports:
-    - port: 3000
-      targetPort: 3000
+    - port: 3002
+      targetPort: 3002
   type: ClusterIP

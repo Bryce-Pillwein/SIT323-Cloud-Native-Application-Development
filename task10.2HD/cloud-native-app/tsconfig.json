@@ -104,6 +104,7 @@
   },
   "include": [
     "src/**/*",
-    "scripts"
+    "scripts",
+    "../tempo-cloud-native-app/services/alert-service/src/services/logAlert.ts"
   ]
 }
