@@ -1,6 +1,6 @@
 // Providers tsx
 
-import { BackendStatusProvider } from "./BackendStatusProvider";
+import { MonitoringProvider } from "./MonitoringProvider";
 
 
 interface ProvidersProps {
@@ -9,10 +9,10 @@ interface ProvidersProps {
 
 export default function Providers({ children }: ProvidersProps) {
   return (
-    <BackendStatusProvider>
+    <MonitoringProvider>
 
       {children}
 
-    </BackendStatusProvider>
+    </MonitoringProvider>
   );
 }
