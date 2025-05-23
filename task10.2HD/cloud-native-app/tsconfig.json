@@ -105,6 +105,7 @@
   "include": [
     "src/**/*",
     "scripts",
-    "../tempo-cloud-native-app/services/alert-service/src/services/logAlert.ts"
+    "../tempo-cloud-native-app/services/alert-service/src/services/logAlert.ts",
+    "../tempo-cloud-native-app/services/ingestion-service/src/services/aggregateHealthData.ts"
   ]
 }

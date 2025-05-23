@@ -5,7 +5,7 @@ import { checkForAbnormalVitals } from '../../services/checkForAbnormalVitals';
 import { validateHealthData } from '../../middleware/validation';
 import { HealthData, RunHealthData } from '../../types/HealthData';
 import { updateRunAggregation } from '../../services/updateRunAggregation';
-import { bufferAndAggregate } from '../../services/aggregateHealthData';
+import { bufferAndAggregate } from '../../../../tempo-cloud-native-app/services/ingestion-service/src/services/aggregateHealthData';
 import { sendAlert } from '../../../../tempo-cloud-native-app/services/alert-service/src/services/logAlert';
 import { UserProfile } from '../../types/UserProfile';
 

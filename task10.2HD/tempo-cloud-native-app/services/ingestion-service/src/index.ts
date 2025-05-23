@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import postDataRouter from './routes/postData';
+import getMetricRouter from './routes/getMetrics';
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,7 @@ app.get('/healthz', (_req: Request, res: Response) => {
 
 // — Main API —
 app.use('/v1', postDataRouter);
+app.use('/v1', getMetricRouter);
 
 // — Custom 404 JSON —
 app.use((req, res) => {

@@ -24,20 +24,30 @@ const serviceTargets = [
   { name: 'frontend-gateway', url: 'http://frontend-gateway:3006/v1/metrics' },
 ];
 
-let latestMetrics: Record<string, ServiceMetrics> = {};
+let latestMetrics: { data: Record<string, ServiceMetrics>, timestamp: string } = {
+  data: {},
+  timestamp: ''
+};
 
 export async function pollAllServiceMetrics() {
+  const newData: Record<string, ServiceMetrics> = {};
+
   for (const target of serviceTargets) {
     try {
       const res = await fetch(target.url);
-      const json = await res.json();
-      latestMetrics[target.name] = json;
+      const json = await res.json() as ServiceMetrics;
+      newData[target.name] = json;
     } catch (err) {
       console.error(`Failed to fetch metrics from ${target.name}:`, err);
     }
   }
+
+  latestMetrics = {
+    data: newData,
+    timestamp: new Date().toISOString()
+  };
 }
 
-export function getLatestMetricsSnapshot(): Record<string, ServiceMetrics> {
+export function getLatestMetricsSnapshot() {
   return latestMetrics;
 }

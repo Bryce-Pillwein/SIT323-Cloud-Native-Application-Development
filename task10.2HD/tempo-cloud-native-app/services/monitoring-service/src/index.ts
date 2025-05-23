@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import statusRouter from './routes/status';
+import { pollAllServiceMetrics } from './services/fetchServiceMetrics';
 
 const app = express();
 const PORT = process.env.PORT || 3007;
@@ -26,3 +27,10 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 monitoring-service running on port ${PORT}`);
 });
+
+
+// Begin polling loop
+pollAllServiceMetrics();
+setInterval(() => {
+  pollAllServiceMetrics();
+}, 30000);

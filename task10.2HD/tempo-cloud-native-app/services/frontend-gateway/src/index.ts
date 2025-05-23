@@ -4,10 +4,11 @@ import getAlertsRouter from './routes/getAlerts';
 import getSummaryRouter from './routes/getSummary';
 import getAggregatesRouter from './routes/getAggregates';
 import getMetricsRouter from './routes/getMetrics';
-
+import getMonitoringRouter from './routes/getMonitoringData';
 
 const app = express();
 app.use(express.json());
+
 
 // — Health Probes —
 app.get('/healthz', (_req: Request, res: Response) => {
@@ -21,6 +22,7 @@ app.use('/v1', getAlertsRouter);
 app.use('/v1', getSummaryRouter);
 app.use('/v1', getAggregatesRouter);
 app.use('/v1', getMetricsRouter);
+app.use('/v1', getMonitoringRouter);
 
 
 // — Custom 404 JSON —

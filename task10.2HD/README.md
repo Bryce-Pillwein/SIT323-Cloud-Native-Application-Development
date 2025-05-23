@@ -3,36 +3,21 @@
 Author: Bryce Pillwein (s216133495)  
 Project: SIT323 – Cloud-Native Application Development  
 
-A cloud-native backend system for ingesting, processing, storing, and monitoring simulated health vitals from wearable devices. Built with Express, TypeScript, Firestore, and deployed via GKE Autopilot using Kubernetes.  
+A cloud-native, microservice-based system for ingesting, processing, and monitoring simulated health vitals from wearable devices. Services are built using Express and TypeScript, containerized with Docker, and deployed on GKE Autopilot. Real-time observability is provided by an internal monitoring service that tracks CPU and memory usage of all services.
 
 ## Table of Contents
 
-1. [Features](#features)  
-2. [Project Structure](#project-structure)  
-3. [Tech Stack](#tech-stack)  
-4. [Setup & Initialisation](#setup--initialisation)  
-5. [Environment Variables](#environment-variables)  
-6. [API Endpoints](#api-endpoints)  
-7. [Data Flow & Firestore Schema](#data-flow--firestore-schema)  
-8. [Monitoring & Logging](#monitoring--logging)  
-9. [Deployment](#deployment)  
-10. [Challenges & Solutions](#challenges--solutions)
-
-
-<br/>
-
-
-## Features
-
-- **Data Ingestion:** Accepts health metrics via `POST /api/v1/data`, validates using Zod schemas.
-- **Abnormal Detection:** Flags unsafe vitals and logs alerts.
-- **Live Snapshots:** Stores latest data in `liveVitals/{userId}`.
-- **Historical Records:** Appends raw entries under `vitalHistory/{userId}/entries/{uuid}`.
-- **Run Aggregation:** Groups every 5 entries into time-based averages under `vitalAggregates/{userId}/batches`.
-- **User Profiles:** Fetch thresholds via `GET /api/v1/profile/:userId`.
-- **Logs:** Firestore `appLogs` collection for console messages.
-- **Health Checks:** `/healthz` for K8s readiness.
-- **Simulator-Ready:** Containers push mock data for load testing.
+1. [Project Structure](#project-structure)  
+2. [Features](#features)
+3. [Microservices](#microservices)  
+4. [Tech Stack](#tech-stack)  
+5. [Setup & Initialisation](#setup--initialisation)  
+6. [Environment Variables](#environment-variables)  
+7. [API Endpoints](#api-endpoints)  
+8. [Data Flow & Firestore Schema](#data-flow--firestore-schema)  
+9. [Monitoring & Logging](#monitoring--logging)  
+10. [Deployment](#deployment)  
+11. [Challenges & Solutions](#challenges--solutions)
 
 
 <br/>
@@ -42,45 +27,33 @@ A cloud-native backend system for ingesting, processing, storing, and monitoring
 
 ```
 Task10.2HD/
-├── cloud-native-app/
-│   ├── node_modules
-│   ├── src/
-│   │   ├── config/
-│   │   │   └── firebase.ts
-│   │   ├── middleware/
-│   │   │   └── validation.ts
-│   │   ├── routes/
-│   │   │   ├── delete/
-│   │   │   │   └── clearData.ts
-│   │   │   ├── get/
-│   │   │   │   ├── aggregates.ts
-│   │   │   │   ├── history.ts
-│   │   │   │   ├── logs.ts
-│   │   │   │   └── profile.ts
-│   │   │   ├── post/
-│   │   │   │   └── data.ts
-│   │   │   └── index.ts
-│   │   ├── services/
-│   │   │   ├── monitoring/
-│   │   │   │   └── appLogger.ts
-│   │   │   ├── aggregateHealthData.ts
-│   │   │   ├── alertService.ts
-│   │   │   ├── checkForAbnormalVitals.ts
-│   │   │   ├── clearUserData.ts
-│   │   │   ├── haversinDistance.ts
-│   │   │   └── updateRunAggregation.ts
-│   │   ├── types/
-│   │   │   ├── HealthData.ts
-│   │   │   └── UserProfile.ts
-│   │   └── index.ts
-│   ├── .env
-│   ├── Dockerfile
-│   ├── jest.config.js
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── deployment.yaml
-│   └── service.yaml
+├── tempo-cloud-native-app/
+│   ├── k8s/
+│   │   ├── abnormality-service.yaml
+│   │   ├── alert-service.yaml
+│   │   ├── analytics-service.yaml
+│   │   ├── frontend-gateway.yaml
+│   │   ├── ingestion-service.yaml
+│   │   ├── monitoring-service.yaml
+│   │   ├── profile-service.yaml
+│   │   └── simulation-service.yaml
+│   ├── services/
+│   │   ├── abnormality-service/
+│   │   │   └── node_modules | src/ | Dockerfile | etc.
+│   │   ├── alert-service/
+│   │   │   └── node_modules | src/ | Dockerfile | etc.
+│   │   ├── analytics-service/
+│   │   │   └── node_modules | src/ | Dockerfile | etc.
+│   │   ├── frontend-gateway/
+│   │   │   └── node_modules | src/ | Dockerfile | etc.
+│   │   ├── ingestion-service/
+│   │   │   └── node_modules | src/ | Dockerfile | etc.
+│   │   ├── monitoring-service/
+│   │   │   └── node_modules | src/ | Dockerfile | etc.
+│   │   ├── profile-service/
+│   │   │   └── node_modules | src/ | Dockerfile | etc.
+│   │   └── simulation-service/
+│   │       └── node_modules | src/ | Dockerfile | etc.
 ├── tempo-web-app/
 │   └── [Front-End]
 └── README.md
@@ -90,18 +63,57 @@ Task10.2HD/
 <br/>
 
 
+## Features
+
+- **Ingestion Service:** Accepts health metrics, validates using Zod, and stores snapshots and history in Firestore.  
+- **Profile Service:** Provides user-specific threshold configurations (min/max heart rate, temp, SpO2).  
+- **Abnormality Service:** Detects unsafe vitals and publishes alerts.  
+- **Alert Service:** Logs alerts received and exposes them via API.  
+- **Analytics Service:** Aggregates historical data into time-window summaries.  
+- **Simulation Service:** Periodically generates and publishes mock health data for multiple users.  
+- **Monitoring Service:** Tracks CPU/memory usage of each service via internal metrics endpoints.  
+- **Frontend Gateway:** Proxies all services behind a unified REST API, compatible with frontend frameworks (e.g. Remix).  
+
+
+<br/>
+
+
+## Microservices
+
+Each microservice runs independently with its own:
+- Codebase (`services/<service-name>`)
+- Dockerfile
+- Deployment + Service YAML
+- Health check at `/healthz`
+
+| Service               | Port | Role                                       |
+|-----------------------|------|--------------------------------------------|
+| ingestion-service     | 3000 | Accept and store validated health data     |
+| profile-service       | 3001 | Serve user threshold profiles              |
+| abnormality-service   | 3002 | Detect and publish abnormal events         |
+| alert-service         | 3003 | Log and expose alert history               |
+| analytics-service     | 3004 | Summarise health data into aggregates      |
+| simulation-service    | 3005 | Simulate and publish mock device readings  |
+| frontend-gateway      | 3006 | API gateway for all services               |
+| monitoring-service    | 3007 | Poll system metrics and expose them        |
+
+
+<br/>
+
+
 ## Tech Stack
 
-| Tool / Service              | Purpose                                   |
-|-----------------------------|-------------------------------------------|
-| **Node.js / Express**       | Backend application and routing logic     |
-| **TypeScript**              | Typed JavaScript support                  |
-| **Zod**                     | Schema validation                         |
-| **Docker**                  | Containerization                          |
-| **Docker Hub / GCP AR**     | Hosting container images                  |
-| **Firestore**               | NoSQL database for vitals and logs        |
-| **GKE Autopilot**           | Kubernetes hosting and autoscaling        |
-| **Cloud Logging / Metrics** | Observability in GCP                      |
+| Tool / Service             | Purpose                                       |
+|----------------------------|-----------------------------------------------|
+| **Node.js / Express**      | REST API logic                                |
+| **TypeScript**             | Static typing                                 |
+| **Zod**                    | Runtime validation for health data            |
+| **Firestore**              | Primary NoSQL data storage                    |
+| **Docker**                 | Containerization                              |
+| **Kubernetes (GKE)**       | Service orchestration                         |
+| **MQTT (HiveMQ)**          | Message transport for simulator + detectors   |
+| **Docker Hub**             | Public image registry                         |
+| **kubectl + port-forward** | Dev/test ingress                              |
 
 
 <br/>
@@ -112,6 +124,7 @@ Task10.2HD/
 
 1. **Install dependencies:**
    ```bash
+   cd services/<service-name>
    npm install
    ```
 
@@ -134,13 +147,15 @@ Task10.2HD/
 
 
 ## Environment Variables
-
-| Name                             | Description                                     |
-|----------------------------------|-------------------------------------------------|
-| `PORT`                           | Express server port (default: 3000)             |
-| `FIREBASE_PROJECT_ID`            | Firebase project ID                             |
-| `FIREBASE_ADMIN_CLIENT_EMAIL`    | Firebase service account email                  |
-| `FIREBASE_ADMIN_PRIVATE_KEY`     | Private key (escaped newlines required)         |
+| Variable                      | Description                      |
+| ----------------------------- | -------------------------------- |
+| `PORT`                        | Service port                     |
+| `MQTT_BROKER_URL`             | MQTT broker (HiveMQ)             |
+| `MQTT_TOPIC`                  | Topic for publishing health data |
+| `PROFILE_SERVICE_URL`         | URL to fetch user thresholds     |
+| `FIREBASE_PROJECT_ID`         | Firestore project ID             |
+| `FIREBASE_ADMIN_CLIENT_EMAIL` | Firebase Admin email             |
+| `FIREBASE_ADMIN_PRIVATE_KEY`  | Escaped private key string       |
 
 
 <br/>
@@ -148,16 +163,21 @@ Task10.2HD/
 
 ## API Endpoints
 
-### Health & Logs
-- `GET /healthz` – Liveness check  
-- `GET /api/v1/logs?limit=50` – Retrieve recent logs  
+### Ingestion
+- `POST /v1/data` – Accept health data
+- `GET /v1/history/:userId` – Paginated historical vitals
+- `GET /v1/aggregates/:userId` – Aggregated metrics
+- `DELETE /v1/users/:userId/data` – Wipe all user data
 
-### Data
-- `POST /api/v1/data` – Submit validated health data  
-- `GET /api/v1/history/:userId?page=n&size=m` – Paginated vital history  
-- `GET /api/v1/aggregates/:userId?limit=n` – Fetch recent aggregates  
-- `GET /api/v1/profile/:userId` – Get user thresholds  
-- `DELETE /api/v1/users/:userId/data` – Delete all user data (except profile)  
+### Profile & Alert
+- `GET /v1/profile/:userId` – Fetch user thresholds
+- `GET /v1/alerts/:userId` – Get alert history
+- `POST /v1/alert` – Manually trigger alert
+
+### Monitoring & Gateway
+- `GET /v1/services-status` – Metrics from all services
+- `GET /v1/monitoring` – Proxy for monitoring-service via gateway
+- `GET /healthz` – Liveness probe for each service
 
 
 <br/>
@@ -166,64 +186,73 @@ Task10.2HD/
 ## Data Flow & Firestore Schema
 
 ### Flow
-1. **Ingestion:** `POST /data` → Validate → Write to Firestore  
-2. **Live Vitals:** `liveVitals/{userId}` (replaces)  
-3. **History:** `vitalHistory/{userId}/entries/{uuid}`  
-4. **Aggregation:** Every 5 entries → `vitalAggregates/{userId}/batches`  
-5. **Alerts:** If abnormal → `alerts/{auto-id}`  
+1. **Simulator** → publishes to MQTT
+2. **Ingestion** → validates and stores raw & live data
+3. **Abnormality** Service → fetches profile → checks thresholds → triggers alert
+4. **Alert Service** → logs alert in Firestore
+5. **Analytics Service** → buffers every 5 entries into aggregate
+6. **Frontend Gateway** → central access to services + metrics
 
-### Firestore Collections
+### Storage Paths
 ```
 liveVitals/{userId}
 vitalHistory/{userId}/entries/{uuid}
-alerts/{auto-id}
-aggregates/{userId}
 vitalAggregates/{userId}/batches/{auto-id}
-appLogs/{auto-id}
+aggregates/{userId}
+alerts/{auto-id}
 USER_PROFILES/{userId}
+appLogs/{auto-id}
 ```
 
 
 <br/>
 
 
-## Monitoring & Logging
+## Monitoring Architecture
+The monitoring-service polls internal /v1/metrics endpoints exposed by each microservice and returns:  
+```sh 
+{
+  "data": {
+    "ingestion-service": {
+      "uptime": "60.2s",
+      "memory": { "heapUsed": 24132000, ... },
+      "cpu": { "user": 130800, "system": 6200 }
+    },
+    ...
+  },
+  "timestamp": "2024-05-22T08:43:01.215Z"
+}
+```
 
-- **Logs:** All console logs are saved to Firestore `appLogs`
-- **Cloud Monitoring:** GCP dashboard shows container usage
-- **Log Explorer Tips:** Filter by cluster name, pod, or resource type
+This is available via:
+```sh
+GET /v1/services-status
+GET /v1/monitoring (via gateway)
+```
 
+Metrics also availible with:
+```sh
+kubectl top pods 
+```
 
 <br/>
 
 
 ## Deployment
 
-### Containerisation
-
-```bash
-# Build image with version tag
-docker build -t brycepillwein/tempo-backend:v1.0.2 .
-
-# Push Image
-docker push brycepillwein/tempo-backend:v1.0.2 
+### Build & Push Each Image
+```sh
+docker build -t brycepillwein/<service-name>:latest ./services/<service-name>
+docker push brycepillwein/<service-name>:latest
 ```
 
-### Tag and Update in Kubernetes
-
-```bash
-kubectl set image deployment/tempo-backend tempo-backend=brycepillwein/tempo-backend:v1.0.2 --record
-```
-
-### Deploy to GKE
-
-```bash
+### Deploy to Kubernetes (GKE)
+```sh
 # Authenticate with GKE
 gcloud container clusters get-credentials tempo-cluster --region australia-southeast2
 
 # Apply deployment and service
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
+kubectl apply -f k8s/
 
 # Restart (Optional - use for updating)
 kubectl rollout restart deployment tempo-backend 
@@ -236,32 +265,16 @@ kubectl get pods
 kubectl get svc tempo-backend
 ```
 
-
-<br/>
-
-
-## Updating or Resetting the System
-
-```bash
-# Scale down to 0
-kubectl scale deployment tempo-backend --replicas=0
-kubectl delete service tempo-backend
-
-# Scale up again
-kubectl scale deployment tempo-backend --replicas=2
-kubectl apply -f service.yaml
-```
-
-
 <br/>
 
 
 ## Challenges & Solutions
 
-| Challenge                                          | Resolution                                                             |
-|----------------------------------------------------|------------------------------------------------------------------------|
-| `ErrImagePull` due to GCP restrictions             | Switched from Artifact Registry to Docker Hub                          |
-| Autopilot cluster showing no nodes                 | Understood that nodes provision dynamically upon workload scheduling   |
-| GKE authentication failure                         | Used `gcloud auth application-default login` for ADC setup             |
-| Too many logs in Log Explorer                      | Applied filters (resource, pod, namespace) to refine results           |
-| Kubernetes pulling stale `latest` image            | Adopted semantic versioning (e.g., `v1.0.2`) to ensure image freshness |
+| Challenge                                  | Solution                                            |
+| ------------------------------------------ | --------------------------------------------------- |
+| Stale Docker images                        | Used `imagePullPolicy: Always` or versioned tags    |
+| `kubectl` not working in container         | Replaced with internal `/metrics` polling           |
+| GCP permissions for monitoring API blocked | Implemented custom monitoring via Express + polling |
+| Logs too noisy                             | Centralized logs in `appLogs` collection            |
+| MQTT broker reliability                    | Switched to HiveMQ public broker for testing        |
+| Firestore reads too frequent               | Reduced polling + centralized summaries             |
