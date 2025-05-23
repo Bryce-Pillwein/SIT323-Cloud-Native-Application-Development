@@ -1,5 +1,5 @@
 {
-  "name": "alert-service",
+  "name": "frontend-gateway",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,13 +13,13 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "firebase-admin": "^13.4.0"
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.21",
+    "@types/node-fetch": "^2.6.12",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

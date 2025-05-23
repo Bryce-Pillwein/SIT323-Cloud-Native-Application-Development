@@ -14,7 +14,7 @@ if (!admin.apps.length) {
         projectId: process.env.FIREBASE_PROJECT_ID,
       }),
     });
-    console.log("⚡ Initalised Firebase Admin Credentials in Alert Service");
+    console.log("⚡ Initalised Firebase Admin Credentials in Analytics Service");
   } catch (error) {
     console.error("🚫 Failed to initialize Firebase Admin SDK:", error);
   }

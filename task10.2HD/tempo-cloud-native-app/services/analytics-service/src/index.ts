@@ -1,18 +1,20 @@
 import express, { Request, Response } from 'express';
-import getProfileRoute from './routes/getProfile';
+import getSummaryRouter from './routes/getSummary';
+import getAggregatesRouter from './routes/getAggregates';
 import getMetricsRouter from './routes/getMetrics';
 
-
 const app = express();
-const PORT = process.env.PORT || 3001;
+app.use(express.json());
 
 // — Health Probes —
 app.get('/healthz', (_req: Request, res: Response) => {
-  res.sendStatus(200);
+  res.status(200).send('OK');
 });
 
+
 // — Main API —
-app.use('/v1', getProfileRoute);
+app.use('/v1', getSummaryRouter);
+app.use('/v1', getAggregatesRouter);
 app.use('/v1', getMetricsRouter);
 
 
@@ -23,6 +25,9 @@ app.use((req, res) => {
   });
 });
 
+
+const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => {
-  console.log(`🚀 profile-service running on port ${PORT}`);
+  console.log(`🚀 analytics-service running on port ${PORT}`);
 });
+

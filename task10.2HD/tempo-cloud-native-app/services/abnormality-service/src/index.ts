@@ -1,9 +1,10 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import mqtt from 'mqtt';
 import { HealthData } from './types/HealthData';
 import { checkForAbnormalVitals } from './services/checkForAbnormalVitals';
 import { fetchUserProfile } from './services/fetchProfile';
 import { sendAlert } from './services/sendAlert';
+import getMetricsRouter from './routes/getMetrics';
 
 // ENV config check
 const brokerUrl = process.env.MQTT_BROKER_URL;
@@ -69,8 +70,19 @@ client.on('message', async (_topic, message) => {
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-app.get('/healthz', (_req, res) => {
+// — Health Probes —
+app.get('/healthz', (_req: Request, res: Response) => {
   res.status(200).send('OK');
+});
+
+// — Main API —
+app.use('/v1', getMetricsRouter);
+
+// — Custom 404 JSON —
+app.use((req, res) => {
+  res.status(404).json({
+    error: `Route ${req.method} ${req.originalUrl} not found`,
+  });
 });
 
 app.listen(PORT, () => {

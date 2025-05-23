@@ -6,7 +6,7 @@ app.use(express.json());
 
 // — Health Probes —
 app.get('/healthz', (_req: Request, res: Response) => {
-  res.sendStatus(200);
+  res.status(200).send('OK');
 });
 
 // — Main API —

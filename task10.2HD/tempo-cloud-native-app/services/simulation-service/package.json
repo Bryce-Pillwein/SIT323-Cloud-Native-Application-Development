@@ -1,21 +1,20 @@
 {
-  "name": "alert-service",
+  "name": "simulation-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node src/simulate.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/simulate.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "firebase-admin": "^13.4.0"
+    "axios": "^1.9.0",
+    "express": "^5.1.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.2",

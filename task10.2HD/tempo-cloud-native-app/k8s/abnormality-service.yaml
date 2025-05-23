@@ -17,14 +17,17 @@ spec:
       containers:
         - name: abnormality-service
           image: docker.io/brycepillwein/abnormality-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3002
           livenessProbe:
             httpGet:
               path: /healthz
               port: 3002
-            initialDelaySeconds: 15
+            initialDelaySeconds: 20
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
           env:
             - name: MQTT_BROKER_URL
               value: "mqtt://broker.hivemq.com:1883"

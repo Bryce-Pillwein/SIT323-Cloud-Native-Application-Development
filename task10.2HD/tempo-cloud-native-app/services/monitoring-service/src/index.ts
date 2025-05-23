@@ -1,19 +1,18 @@
 import express, { Request, Response } from 'express';
-import getProfileRoute from './routes/getProfile';
-import getMetricsRouter from './routes/getMetrics';
-
+import statusRouter from './routes/status';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3007;
+
 
 // — Health Probes —
 app.get('/healthz', (_req: Request, res: Response) => {
-  res.sendStatus(200);
+  res.status(200).send('OK');
 });
 
+
 // — Main API —
-app.use('/v1', getProfileRoute);
-app.use('/v1', getMetricsRouter);
+app.use('/v1', statusRouter);
 
 
 // — Custom 404 JSON —
@@ -23,6 +22,7 @@ app.use((req, res) => {
   });
 });
 
+
 app.listen(PORT, () => {
-  console.log(`🚀 profile-service running on port ${PORT}`);
+  console.log(`🚀 monitoring-service running on port ${PORT}`);
 });

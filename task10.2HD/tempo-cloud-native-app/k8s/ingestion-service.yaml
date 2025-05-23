@@ -17,14 +17,17 @@ spec:
       containers:
         - name: ingestion-service
           image: docker.io/brycepillwein/ingestion-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           livenessProbe:
             httpGet:
               path: /healthz
               port: 3000
-            initialDelaySeconds: 15
+            initialDelaySeconds: 20
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
           env:
             - name: MQTT_BROKER_URL
               value: "mqtt://broker.hivemq.com:1883"

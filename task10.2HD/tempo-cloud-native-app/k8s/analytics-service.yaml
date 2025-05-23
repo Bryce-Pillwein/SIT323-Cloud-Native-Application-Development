@@ -1,36 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: profile-service
+  name: analytics-service
   labels:
-    app: profile-service
+    app: analytics-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: profile-service
+      app: analytics-service
   template:
     metadata:
       labels:
-        app: profile-service
+        app: analytics-service
     spec:
       containers:
-        - name: profile-service
-          image: docker.io/brycepillwein/profile-service:latest
+        - name: analytics-service
+          image: docker.io/brycepillwein/analytics-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 3001
+            - containerPort: 3004
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 3001
+              port: 3004
             initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
           env:
             - name: PORT
-              value: "3001"
+              value: "3004"
             - name: FIREBASE_PROJECT_ID
               value: "tempo-vital-tracker-sit323"
             - name: FIREBASE_ADMIN_CLIENT_EMAIL
@@ -41,11 +41,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: profile-service
+  name: analytics-service
 spec:
   selector:
-    app: profile-service
+    app: analytics-service
   ports:
-    - port: 3001
-      targetPort: 3001
+    - port: 3004
+      targetPort: 3004
   type: ClusterIP

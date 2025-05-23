@@ -1,11 +1,13 @@
 import express, { Request, Response } from 'express';
-import postAlertRouter from './routes/postAlert';
-import getAlertRouter from './routes/getAlert'
+import getProfileRouter from './routes/getProfile';
+import getAlertsRouter from './routes/getAlerts';
+import getSummaryRouter from './routes/getSummary';
+import getAggregatesRouter from './routes/getAggregates';
 import getMetricsRouter from './routes/getMetrics';
+
 
 const app = express();
 app.use(express.json());
-
 
 // — Health Probes —
 app.get('/healthz', (_req: Request, res: Response) => {
@@ -14,8 +16,10 @@ app.get('/healthz', (_req: Request, res: Response) => {
 
 
 // — Main API —
-app.use('/v1', postAlertRouter);
-app.use('/v1', getAlertRouter);
+app.use('/v1', getProfileRouter);
+app.use('/v1', getAlertsRouter);
+app.use('/v1', getSummaryRouter);
+app.use('/v1', getAggregatesRouter);
 app.use('/v1', getMetricsRouter);
 
 
@@ -27,7 +31,7 @@ app.use((req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3006;
 app.listen(PORT, () => {
-  console.log(`🚀 alert-service running on port ${PORT}`);
+  console.log(`🚀 frontend-gateway running on port ${PORT}`);
 });

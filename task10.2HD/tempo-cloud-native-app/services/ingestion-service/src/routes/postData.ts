@@ -4,6 +4,8 @@ import { db } from '../config/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { HealthData } from '../types/HealthData';
 import { publishHealthData } from '../services/publishToMQTT';
+import { bufferAndAggregate } from '../services/aggregateHealthData';
+
 
 const router = Router();
 
@@ -21,6 +23,8 @@ router.post('/data', validateHealthData, async (req: Request<{}, any, HealthData
       .collection('entries')
       .doc(uuidv4())
       .set(data);
+
+    await bufferAndAggregate(data);
 
     // Publish to MQTT
     publishHealthData('tempotrackvital0192837465/health/new', data);

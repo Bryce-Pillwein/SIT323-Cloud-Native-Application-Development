@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulation-service
+  labels:
+    app: simulation-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulation-service
+  template:
+    metadata:
+      labels:
+        app: simulation-service
+    spec:
+      containers:
+        - name: simulation-service
+          image: docker.io/brycepillwein/simulation-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3005
+          env:
+            - name: INGESTION_URL
+              value: "http://ingestion-service:3000/v1/data"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulation-service
+spec:
+  selector:
+    app: simulation-service
+  ports:
+    - port: 3005
+      targetPort: 3005
+  type: ClusterIP

@@ -1,45 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: alert-service
+  name: frontend-gateway
   labels:
-    app: alert-service
+    app: frontend-gateway
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: alert-service
+      app: frontend-gateway
   template:
     metadata:
       labels:
-        app: alert-service
+        app: frontend-gateway
     spec:
       containers:
-        - name: alert-service
-          image: docker.io/brycepillwein/alert-service:latest
+        - name: frontend-gateway
+          image: docker.io/brycepillwein/frontend-gateway:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 3003
+            - containerPort: 3006
+          env:
+            - name: PORT
+              value: "3006"
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 3003
+              port: 3006
             initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
-          env:
-            - name: PORT
-              value: "3003"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: alert-service
+  name: frontend-gateway
 spec:
   selector:
-    app: alert-service
+    app: frontend-gateway
   ports:
-    - port: 3003
-      targetPort: 3003
+    - port: 3006
+      targetPort: 3006
   type: ClusterIP
