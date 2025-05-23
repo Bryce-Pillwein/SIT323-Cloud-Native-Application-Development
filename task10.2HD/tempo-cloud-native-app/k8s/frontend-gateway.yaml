@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend-gateway
-          image: docker.io/brycepillwein/frontend-gateway:latest
+          image: brycepillwein/frontend-gateway:latest-1
           imagePullPolicy: Always
           ports:
             - containerPort: 3006
@@ -37,9 +37,9 @@ kind: Service
 metadata:
   name: frontend-gateway
 spec:
+  type: LoadBalancer
   selector:
     app: frontend-gateway
   ports:
-    - port: 3006
+    - port: 80
       targetPort: 3006
-  type: ClusterIP

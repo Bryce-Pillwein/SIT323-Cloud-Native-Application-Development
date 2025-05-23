@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import getProfileRouter from './routes/getProfile';
 import getAlertsRouter from './routes/getAlerts';
 import getSummaryRouter from './routes/getSummary';
@@ -8,10 +9,15 @@ import getMonitoringRouter from './routes/getMonitoringData';
 
 const app = express();
 app.use(express.json());
-
+app.use(cors());
 
 // — Health Probes —
 app.get('/healthz', (_req: Request, res: Response) => {
+  res.status(200).send('OK');
+});
+
+// — Health Probes —
+app.get('/test-1', (_req: Request, res: Response) => {
   res.status(200).send('OK');
 });
 

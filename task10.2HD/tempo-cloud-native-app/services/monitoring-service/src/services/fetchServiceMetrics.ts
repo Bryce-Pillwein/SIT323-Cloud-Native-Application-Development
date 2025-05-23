@@ -20,7 +20,6 @@ const serviceTargets = [
   { name: 'abnormality-service', url: 'http://abnormality-service:3002/v1/metrics' },
   { name: 'alert-service', url: 'http://alert-service:3003/v1/metrics' },
   { name: 'analytics-service', url: 'http://analytics-service:3004/v1/metrics' },
-  // { name: 'simulation-service', url: 'http://simulation-service:3005/v1/metrics' },
   { name: 'frontend-gateway', url: 'http://frontend-gateway:3006/v1/metrics' },
 ];
 
